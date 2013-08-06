@@ -1,5 +1,6 @@
-wordSize = 4
+wordSize = args[0] as int
 words = [] as Set
+
 new File('words.txt').eachLine { line ->
     line = line.trim().toUpperCase()
     if(line?.size() == wordSize) {

@@ -1,7 +1,7 @@
 words = []
 new File('words.txt').eachLine { line ->
-    line = line.trim()
-    if(line) {
+    line = line.trim().toUpperCase()
+    if(line?.size() == 4) {
         words << line
     }
 }

@@ -1,7 +1,8 @@
-words = []
+wordSize = 4
+words = [] as Set
 new File('words.txt').eachLine { line ->
     line = line.trim().toUpperCase()
-    if(line?.size() == 4) {
+    if(line?.size() == wordSize) {
         words << line
     }
 }
@@ -14,13 +15,16 @@ getChar = { int offset ->
     c = 65 + offset
     if(c > 90) c -= 26
     (char)c
-}
+}.memoize()
 
 wordSets = []
-getWords = { off1, off2, off3 ->
+getWords = { offsets ->
     foundWords = [] as SortedSet
     (0..25).each { p1 ->
-        word = "" + getChar(p1) + getChar(off1 + p1) + getChar(off2 + p1) + getChar(off3 + p1)
+        word = "" + getChar(p1)
+        offsets.each { offset ->
+            word += getChar(p1 + offset)
+        }
         if(words.contains(word)) {
             foundWords << word
         }
@@ -29,13 +33,20 @@ getWords = { off1, off2, off3 ->
         wordSets << foundWords
     }
 }
-(0..25).each { off1 ->
-   (0..25).each { off2 ->
-       (0..25).each { off3 ->
-           getWords(off1, off2, off3)
-       }
-   }
+
+rigIt = null
+rigIt = { coll ->
+    if(coll.size() < wordSize - 1) {
+        26.times { t ->
+            rigIt(coll + t)
+        }
+    } else {
+        getWords coll
+    }
 }
+foo = []
+rigIt foo
+
 
 wordSets.sort { it[0] }.sort { it.size() }.each {
     println it

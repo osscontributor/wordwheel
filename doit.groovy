@@ -16,8 +16,9 @@ getChar = { int offset ->
     (char)c
 }
 
+wordSets = []
 getWords = { off1, off2, off3 ->
-    foundWords = []
+    foundWords = [] as SortedSet
     (0..25).each { p1 ->
         word = "" + getChar(p1) + getChar(off1 + p1) + getChar(off2 + p1) + getChar(off3 + p1)
         if(words.contains(word)) {
@@ -25,7 +26,7 @@ getWords = { off1, off2, off3 ->
         }
     }
     if(foundWords.size() > 1) {
-        println foundWords
+        wordSets << foundWords
     }
 }
 (0..25).each { off1 ->
@@ -34,4 +35,8 @@ getWords = { off1, off2, off3 ->
            getWords(off1, off2, off3)
        }
    }
+}
+
+wordSets.sort { it[0] }.sort { it.size() }.each {
+    println it
 }

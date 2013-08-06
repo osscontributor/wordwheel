@@ -1,5 +1,5 @@
 
-(2..4).each { wordSize ->
+(2..6).each { wordSize ->
 words = [] as Set
 
 new File('words.txt').eachLine { line ->
@@ -33,6 +33,7 @@ getWords = { offsets ->
     }
     if(foundWords.size() > 1) {
         wordSets << foundWords
+        println foundWords
     }
 }
 
@@ -50,9 +51,9 @@ foo = []
 rigIt foo
 
 
-new File("results_${wordSize}.txt").withWriter { writer ->
-wordSets.sort { it[0] }.sort { it.size() }.each {
-    writer.println it
+new File("results_${wordSize}.txt").withPrintWriter { writer ->
+wordSets.sort { it[0] }.sort { it.size() }.eachWithIndex { words, idx ->
+    writer.printf "%4d: $words\n", idx
 }
 }
 }

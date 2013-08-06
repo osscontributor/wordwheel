@@ -4,6 +4,7 @@ words = [] as Set
 prefixes = [] as Set
 new File('words.txt').eachLine { line ->
     line = line.trim().toUpperCase()
+    if(line.endsWith('%')) line = line[0..-2]
     if(line?.size() == wordSize) {
         words << line
         (1..(wordSize-2)).each {

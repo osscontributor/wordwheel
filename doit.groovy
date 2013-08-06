@@ -1,4 +1,5 @@
-wordSize = args[0] as int
+
+(2..4).each { wordSize ->
 words = [] as Set
 
 new File('words.txt').eachLine { line ->
@@ -49,6 +50,9 @@ foo = []
 rigIt foo
 
 
+new File("results_${wordSize}.txt").withWriter { writer ->
 wordSets.sort { it[0] }.sort { it.size() }.each {
-    println it
+    writer.println it
+}
+}
 }

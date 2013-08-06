@@ -1,5 +1,5 @@
 
-(9..12).each { wordSize ->
+(2..25).each { wordSize ->
 words = [] as Set
 prefixes = [] as Set
 new File('words.txt').eachLine { line ->
@@ -71,7 +71,7 @@ processOffsets = { offsets ->
                 }
             }
             if(matchCount > 1) {
-                println newOffsets
+                println "$wordSize -> ${newOffsets}"
                 processOffsets newOffsets
             }
         }

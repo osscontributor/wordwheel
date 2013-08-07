@@ -12,7 +12,6 @@ new File('words.txt').eachLine { line ->
         }
     }
 }
-letters = ('A'..'Z')
 
 // A = 65
 // Z = 90
@@ -23,22 +22,6 @@ getChar = { int offset ->
 }.memoize()
 
 wordSets = []
-getWords = { offsets ->
-    foundWords = [] as SortedSet
-    (0..25).each { p1 ->
-        word = "" + getChar(p1)
-        offsets.each { offset ->
-            word += getChar(p1 + offset)
-        }
-        if(words.contains(word)) {
-            foundWords << word
-        }
-    }
-    if(foundWords.size() > 1) {
-        wordSets << foundWords
-        println foundWords
-    }
-}
 getWord = { column, offsets ->
     word = "" + getChar(column)
     offsets.each { offset ->

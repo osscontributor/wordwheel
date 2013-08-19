@@ -1,4 +1,8 @@
-
+wheel1 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+wheel2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+wheel3 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+wheel4 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+wheels = [wheel1, wheel2, wheel3, wheel4]
 wordSize = 4
 words = [] as Set
 prefixes = [] as Set
@@ -15,19 +19,16 @@ new File('words.txt').eachLine { line ->
     }
 }
 
-// A = 65
-// Z = 90
-getChar = { int offset ->
-    c = 65 + offset
-    if(c > 90) c -= 26
-    (char)c
+getChar = { int wheelNumber, int offset ->
+    offset = offset % 26
+    wheels[wheelNumber-1].charAt(offset)
 }.memoize()
 
 wordSets = []
 getWord = { column, offsets ->
-    word = "" + getChar(column)
-    offsets.each { offset ->
-        word += getChar(column + offset)
+    word = "" + getChar(1, column)
+    offsets.eachWithIndex { offset, index ->
+        word += getChar(index + 2, column + offset)
     }
     word
 }

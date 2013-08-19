@@ -1,7 +1,8 @@
 
-(2..25).each { wordSize ->
+wordSize = 4
 words = [] as Set
 prefixes = [] as Set
+postfixes = [] as Set
 new File('words.txt').eachLine { line ->
     line = line.trim().toUpperCase()
     if(line.endsWith('%')) line = line[0..-2]
@@ -9,6 +10,7 @@ new File('words.txt').eachLine { line ->
         words << line
         (1..(wordSize-2)).each {
             prefixes << line[0..it]
+            postfixes << line[-1-it..-1]
         }
     }
 }
@@ -34,15 +36,20 @@ processOffsets = { offsets ->
     if(offsets.size() == wordSize -2 ) {
         for(int newOffset = 0; newOffset < 26; newOffset++) {
             newOffsets = offsets + newOffset
-            foundWords = [] as SortedSet
+            foundWords = [] 
             for(int column = 0; column < 26; column++) {
                 word = getWord(column, newOffsets)
                 if(words.contains(word)) {
                     foundWords << word
+                } else if(words.contains(word.reverse())) {
+                    foundWords << word.reverse().toLowerCase()
                 }
             }
             if(foundWords.size() > 1) {
-                wordSets << foundWords
+                sortedFoundWords = foundWords.sort { it.toLowerCase() }
+                //if(Character.isLowerCase(sortedFoundWords[0][0] as char)) {
+                    wordSets << foundWords.sort { it.toLowerCase() }
+                //}
             }
         }
     } else if(offsets.size < wordSize -2) {
@@ -51,6 +58,8 @@ processOffsets = { offsets ->
             newOffsets = offsets + newOffset
             for(int column = 0; column < 26 && matchCount < 2; column++) {
                 if(prefixes.contains(getWord(column, newOffsets))) {
+                    matchCount++
+                } else if(postfixes.contains(getWord(column, newOffsets))) {
                     matchCount++
                 }
             }
@@ -63,9 +72,26 @@ processOffsets = { offsets ->
 }
 processOffsets ([])
 
+comprator = { a, b -> 
+}
+wordSets = wordSets.sort{it[0].toLowerCase()}
+uniqueWords = new ArrayList(wordSets).findAll { list ->
+    if(Character.isLowerCase(list[0][0] as char)) {
+        return true
+    }
+    match = wordSets.find {
+        it*.toLowerCase() == list*.toLowerCase()
+    }
+    if(match) {
+        return false
+    } else {
+        return true
+    }
+}
+
 new File("results_${wordSize}.txt").withPrintWriter { writer ->
-wordSets.sort { it[0] }.sort { it.size() }.eachWithIndex { words, idx ->
-    writer.printf "%4d: $words\n", idx
+uniqueWords.sort { it.size() }.eachWithIndex { words, idx ->
+    writer.printf "%4d: $words\n", idx + 1
 }
 }
-}
+

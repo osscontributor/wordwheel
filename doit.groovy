@@ -1,8 +1,8 @@
 
-wheel1 = 'AWIAPHTTWIRMIDEONCIOSSAEVE' 
-wheel2 = 'PGAUISERNNDIASPMTGRIARTSLH'
-wheel3 = 'HBGGLLTEIWBTEDEAOITNILETNE'
-wheel4 = 'HIACLEOANONRAYHDETTICADDIN'
+wheel1 = 'THRELILICHATUDORSAEJENEBCR' 
+wheel2 = 'WLENROHYROUIDEDJDVRFUAHWOI'
+wheel3 = 'OEEUESWTHYEEDIDUIWOEROENWL'
+wheel4 = 'CEUWNYDAORICYOINAYENTHCRYO'
 wheels = [wheel1, wheel2, wheel3, wheel4]
 wordSize = 4
 words = [] as Set
@@ -86,7 +86,7 @@ groups = uniqueWords.groupBy { words ->
         return 'mixed'
     }
 }
-new File("secret_message_1.txt").withPrintWriter { writer ->
+new File("secret_message_2.txt").withPrintWriter { writer ->
     writer.println "Wheel 1: ${wheel1} (the smallest wheel)"
     writer.println "Wheel 2: ${wheel2}"
     writer.println "Wheel 3: ${wheel3}"

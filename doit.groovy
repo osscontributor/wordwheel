@@ -1,7 +1,8 @@
-wheel1 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-wheel2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-wheel3 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-wheel4 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+wheel1 = 'THRELILICHATUDORSAEJENEBCR' 
+wheel2 = 'WLENROHYROUIDEDJDVRFUAHWOI'
+wheel3 = 'OEEUESWTHYEEDIDUIWOEROENWL'
+wheel4 = 'CEUWNYDAORICYOINAYENTHCRYO'
 wheels = [wheel1, wheel2, wheel3, wheel4]
 wordSize = 4
 words = [] as Set
@@ -65,7 +66,6 @@ processOffsets = { offsets ->
                 }
             }
             if(matchCount > 1) {
-                println "$wordSize -> ${newOffsets}"
                 processOffsets newOffsets
             }
         }
@@ -90,9 +90,75 @@ uniqueWords = new ArrayList(wordSets).findAll { list ->
     }
 }
 
-new File("results_${wordSize}.txt").withPrintWriter { writer ->
-uniqueWords.sort { it.size() }.eachWithIndex { words, idx ->
-    writer.printf "%4d: $words\n", idx + 1
+groups = uniqueWords.groupBy { words ->
+    if(!words.find { Character.isLowerCase(it.charAt(0)) }) {
+        return 'fromInside'
+    } else if(!words.find { Character.isUpperCase(it.charAt(0)) }) {
+        return 'fromOutside'
+    } else {
+        return 'mixed'
+    }
 }
+new File("secret_message_2.txt").withPrintWriter { writer ->
+    writer.println "Wheel 1: ${wheel1} (the smallest wheel)"
+    writer.println "Wheel 2: ${wheel2}"
+    writer.println "Wheel 3: ${wheel3}"
+    writer.println "Wheel 4: ${wheel4} (the largest wheel)"
+    writer.println ''
+    fromInside = groups['fromInside']?.sort { it.size() }
+    if(fromInside) {
+        writer.println """
+Number of wheel positions which include combinations of words
+beginning on the smallest wheel: ${fromInside.size()}
+"""
+        fromInside.eachWithIndex { words, idx ->
+            writer.printf "%4d: ${words*.toUpperCase()}\n", idx + 1
+        }
+    } else {
+        writer.println '''
+No wheel positions were found that only include words beginning
+on the smallest wheel.
+'''
+    }
+
+    fromOutside = groups['fromOutside']?.sort { it.size() }
+    if(fromOutside) {
+        writer.println """
+Number of wheel positions which include combinations of words
+beginning on the largest wheel: ${fromOutside.size()}
+"""
+        fromOutside.eachWithIndex { words, idx ->
+            writer.printf "%4d: ${words*.toUpperCase()}\n", idx + 1
+        }
+    } else {
+        writer.println '''
+No wheel positions were found that only include words beginning
+on the largest wheel.
+'''
+    }
+
+    mixed = groups['mixed']?.sort { it.size() }
+    if(mixed) {
+        writer.println """
+Number of wheel positions which include combinations of words
+beginning on the largest wheel and the smallest wheel: ${mixed.size()}
+
+In the list below, lower case words begin on the largest wheel and
+upper case words begin on the smallest wheel.
+"""
+        mixed.eachWithIndex { words, idx ->
+            writer.printf "%4d: $words\n", idx + 1
+        }
+    } else {
+        writer.println '''
+No wheel positions were found that include combinations of words beginning
+on the largest wheel and the smallest wheel.
+'''
+    }
+    /*
+    uniqueWords.sort { it.size() }.eachWithIndex { words, idx ->
+        writer.printf "%4d: $words\n", idx + 1
+    }
+    */
 }
 

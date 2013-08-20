@@ -76,20 +76,7 @@ processOffsets ([])
 comprator = { a, b -> 
 }
 wordSets = wordSets.sort{it[0].toLowerCase()}
-uniqueWords = new ArrayList(wordSets).findAll { list ->
-    if(Character.isLowerCase(list[0][0] as char)) {
-        return true
-    }
-    match = wordSets.find {
-        it*.toLowerCase() == list*.toLowerCase()
-    }
-    if(match) {
-        return false
-    } else {
-        return true
-    }
-}
-
+uniqueWords = wordSets
 groups = uniqueWords.groupBy { words ->
     if(!words.find { Character.isLowerCase(it.charAt(0)) }) {
         return 'fromInside'
